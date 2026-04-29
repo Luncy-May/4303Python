@@ -21,7 +21,6 @@ Each LLM was given identical prompts to generate Python FastAPI backend componen
 | Task | Prompt |
 |------|--------|
 | Login system | `prompts/generation/login_system.md` |
-| User registration | `prompts/generation/user_registration.md` |
 | Database search | `prompts/generation/database_search.md` |
 | File upload | `prompts/generation/file_upload.md` |
 
