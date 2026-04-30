@@ -84,3 +84,46 @@ curl -X POST "http://127.0.0.1:8000/register" \
 | **No Rate Limiting** | Run `exploit.py`; it completes instantly without blocks. |
 | **User Enumeration** | Attempt to register an existing username (returns 400). |
 | **Session Persistence** | Close the terminal/browser, keep the server running, and try reusing the cookie. |
+
+---
+
+## 5. Static Analysis Testing (Semgrep & Bandit)
+
+To statically analyze `main.py` for security vulnerabilities, you can use **Semgrep** and **Bandit**. These tools automatically scan the code for common issues (like the file upload vulnerabilities, SQL injections, or weak crypto).
+
+### Installing the Tools
+Run this in your terminal to install both tools globally or in your virtual environment:
+
+```bash
+pip install bandit semgrep
+```
+
+### Running Bandit
+Bandit is a tool designed specifically to find common security issues in Python code.
+
+1. Navigate to the directory containing your code.
+2. Run Bandit against the `main.py` file:
+   ```bash
+   bandit -r main.py
+   ```
+   *To output the results to a file for easier reading:*
+   ```bash
+   bandit -r main.py -f html -o bandit_report.html
+   ```
+
+### Running Semgrep
+Semgrep is a fast, open-source static analysis engine that finds bugs and enforces code standards across many languages.
+
+1. Navigate to the directory containing your code.
+2. Run Semgrep using the default security ruleset:
+   ```bash
+   semgrep scan --config p/security main.py
+   ```
+   *Note: If it's your first time running Semgrep, it may prompt you to log in. You can usually skip this or use `--disable-metrics`.*
+
+### Expected Findings
+These tools will likely flag:
+- The use of `sqlite3` without parameterized queries (if any string formatting was used).
+- Hardcoded sensitive values (if any exist).
+- Missing secure configurations in FastAPI.
+- Insecure use of `shutil.copyfileobj` with user-controlled file paths in the file upload endpoints.
